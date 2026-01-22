@@ -1,15 +1,16 @@
-pro 197 79
-tar 197 79
+pro 12 6
+tar 12 6 # C+C
+# tar 208 82 # C+Pb
 
 nev __NEV__
 tim 50 50
-ecm 3.0
+ecm 1.1
 imp -16.0
 rsd __RSD__
 
 cto 63 0 # Skyrme
 cto 64 1 # cluster ON
-eos 1 # mean field
+eos 0 # mean field
 
 #f13
 f14
