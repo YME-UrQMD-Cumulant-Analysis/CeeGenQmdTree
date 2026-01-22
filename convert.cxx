@@ -41,10 +41,16 @@ int main(int argc, char** argv) {
     vector<float> vpx;
     vector<float> vpy;
     vector<float> vpz;
+    vector<float> vrx;
+    vector<float> vry;
+    vector<float> vrz;
     vector<int> vpid;
     float px[MAXMUL];
     float py[MAXMUL];
     float pz[MAXMUL];
+    float rx[MAXMUL];
+    float ry[MAXMUL];
+    float rz[MAXMUL];
     int pid[MAXMUL];
     TTree tt("urqmd", "urqmd");
     tt.Branch("mul", &mul, "mul/I");
@@ -54,18 +60,21 @@ int main(int argc, char** argv) {
     tt.Branch("px", px, "px[mul]/F");
     tt.Branch("py", py, "py[mul]/F");
     tt.Branch("pz", pz, "pz[mul]/F");
+    tt.Branch("rx", rx, "rx[mul]/F");
+    tt.Branch("ry", ry, "ry[mul]/F");
+    tt.Branch("rz", rz, "rz[mul]/F");
 
     std::ifstream fin("qmd_output.txt");
     int nEv = 0;
     while (std::getline(fin, line)) {
         if (isParticleVector(line)) {
             std::istringstream iss(line);
-            float val1, val2, val3, val4, val5; // r0 rx ry rz p0
+            float val1, rx_, ry_, rz_, val5; // r0 rx ry rz p0
             float px_, py_, pz_; // px py pz
             float val6; // m
             int ityp, iso3; // ityp 2i3, and later values are not used
 
-            iss >> val1 >> val2 >> val3 >> val4 >> val5
+            iss >> val1 >> rx_ >> ry_ >> rz_ >> val5
                 >> px_ >> py_ >> pz_
                 >> val6 >> ityp >> iso3;
             if (val1 == 0 && val5 == 0) { continue; }
@@ -73,6 +82,9 @@ int main(int argc, char** argv) {
             vpx.push_back(px_);
             vpy.push_back(py_);
             vpz.push_back(pz_);
+            vrx.push_back(rx_);
+            vry.push_back(ry_);
+            vrz.push_back(rz_);
             vpid.push_back(pdgId);
         } else if (line.rfind("UQMD", 0) == 0) {
             if (isRunning) { // if it is NOT the first: last event ends, record it, and clean the branchs
@@ -80,6 +92,9 @@ int main(int argc, char** argv) {
                 memcpy(px, vpx.data(), mul * sizeof(float));
                 memcpy(py, vpy.data(), mul * sizeof(float));
                 memcpy(pz, vpz.data(), mul * sizeof(float));
+                memcpy(rx, vrx.data(), mul * sizeof(float));
+                memcpy(ry, vry.data(), mul * sizeof(float));
+                memcpy(rz, vrz.data(), mul * sizeof(float));
                 memcpy(pid, vpid.data(), mul * sizeof(int));
                 tt.Fill();
                 // report this event
@@ -90,6 +105,9 @@ int main(int argc, char** argv) {
                 vpx.clear();
                 vpy.clear();
                 vpz.clear();
+                vrx.clear();
+                vry.clear();
+                vrz.clear();
                 vpid.clear();
                 nEv += 1;
             } else { isRunning = true; } // do nothing for the first event but set this flag to true
@@ -111,6 +129,9 @@ int main(int argc, char** argv) {
         memcpy(px, vpx.data(), mul * sizeof(float));
         memcpy(py, vpy.data(), mul * sizeof(float));
         memcpy(pz, vpz.data(), mul * sizeof(float));
+        memcpy(rx, vrx.data(), mul * sizeof(float));
+        memcpy(ry, vry.data(), mul * sizeof(float));
+        memcpy(rz, vrz.data(), mul * sizeof(float));
         memcpy(pid, vpid.data(), mul * sizeof(int));
         cout << "[LOG] - Convert: Event report => b = " << b << " fm, Npart = " << Npart << ", multiplicity = " << mul << "." << endl;
         tt.Fill();
