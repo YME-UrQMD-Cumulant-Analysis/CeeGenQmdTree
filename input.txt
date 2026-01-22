@@ -1,0 +1,21 @@
+pro 197 79
+tar 197 79
+
+nev __NEV__
+tim 50 50
+ecm 3.0
+imp -16.0
+rsd __RSD__
+
+cto 63 0 # Skyrme
+cto 64 1 # cluster ON
+eos 1 # mean field
+
+#f13
+f14
+f15
+f16
+f19
+f20
+
+xxx
