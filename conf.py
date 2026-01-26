@@ -8,3 +8,5 @@ class Args:
     rdsList = '/somewhere/rds.list'
     # target path
     targetPath = '/somewhere/to_save'
+    # output format
+    outputFormat = 'r'
