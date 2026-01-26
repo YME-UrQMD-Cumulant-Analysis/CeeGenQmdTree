@@ -30,7 +30,9 @@ int main(int argc, char** argv) {
 
     bool isRunning = false; // just for the first event
 
-    int jobId = atoi(argv[1]);
+    const char* fNameIn = argv[1];
+    cout << "[LOG] - Convert: Raw UrQMD file name is " << fNameIn << endl;
+    int jobId = atoi(argv[2]);
     cout << "[LOG] - Convert: The job ID is " << jobId << endl;
     // prepare output file
     auto tf = TFile::Open(Form("%05d.root", jobId), "recreate");
@@ -64,7 +66,7 @@ int main(int argc, char** argv) {
     tt.Branch("ry", ry, "ry[mul]/F");
     tt.Branch("rz", rz, "rz[mul]/F");
 
-    std::ifstream fin("qmd_output.txt");
+    std::ifstream fin(fNameIn);
     int nEv = 0;
     while (std::getline(fin, line)) {
         if (isParticleVector(line)) {
