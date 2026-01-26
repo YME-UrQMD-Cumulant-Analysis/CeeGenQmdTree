@@ -88,9 +88,15 @@ for idx in range(nJobs):
         os.system(f'sed -i "s|Df13|#f13|g" {targetPath}/job{idx}/qmd_input.txt')
         os.system(f'ln -s {os.getcwd()}/cvt {targetPath}/job{idx}/cvt')
         os.system(f'sed -i "s|__SW13__|true|g" {targetPath}/job{idx}/Generator.sh')
+    else:
+        os.system(f'sed -i "s|Df13|f13|g" {targetPath}/job{idx}/qmd_input.txt')
+        os.system(f'sed -i "s|__SW13__|false|g" {targetPath}/job{idx}/Generator.sh')
     if outputCEE:
         os.system(f'sed -i "s|Df14|#f14|g" {targetPath}/job{idx}/qmd_input.txt')
         os.system(f'sed -i "s|__SW14__|true|g" {targetPath}/job{idx}/Generator.sh')
+    else:
+        os.system(f'sed -i "s|Df14|f14|g" {targetPath}/job{idx}/qmd_input.txt')
+        os.system(f'sed -i "s|__SW14__|false|g" {targetPath}/job{idx}/Generator.sh')
 
     os.system(f'cd {targetPath}/job{idx} && sbatch Generator.sh')
     l.log(f'[LOG] - Manager System:Job {idx} submitted, random seed: {thisSeed}')

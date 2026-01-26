@@ -49,5 +49,5 @@ if [ "$sw14" = "true" ]; then
         echo "[LOG] - Generator.sh: Output for CEE doesn't exist"
         exit 704
     fi
-    mv $ftn14 __JID__.root
+    mv $ftn14 __JID__.dat
 fi

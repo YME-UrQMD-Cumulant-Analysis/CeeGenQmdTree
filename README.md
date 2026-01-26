@@ -40,7 +40,7 @@ This program will:
 
 ## Änderungsprotokoll
 
-26.01.2026 `U4 v1.1` - Yige Huang
+26.01.2026 `U4 v1.2` - Yige Huang
 
 * Add an option to save `ftn14`
 
