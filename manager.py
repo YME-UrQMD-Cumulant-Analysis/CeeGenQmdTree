@@ -30,6 +30,24 @@ else:
 
 existing_set = set(rds)
 
+outputFormat = Args.outputFormat
+outputROOT = False
+outputCEE = False
+if outputFormat in ['r', 'R', 'root', 'ROOT']:
+    outputROOT = True
+elif outputFormat in ['c', 'C', 'cee', 'CEE']:
+    outputCEE = True
+elif outputFormat in ['b', 'B', 'both', 'BOTH']:
+    outputROOT = True
+    outputCEE = True
+else:
+    l.log(f'[ERROR] - Manager System: Invalid output format received {outputFormat}!')
+    raise Exception(f'[ERROR] - Manager System: Invalid output format received {outputFormat}!')
+if outputROOT:
+    l.log(f'[LOG] - Manager System: ROOT output is on')
+if outputCEE:
+    l.log(f'[LOG] - Manager System: CEE output is on')
+
 UrQMDMain = Args.UrQMDMain
 UrQMDTable = Args.UrQMDTable
 assert(os.path.exists(UrQMDMain))
@@ -57,16 +75,22 @@ for idx in range(nJobs):
     # and link executbale + table
     os.system(f'ln -s {UrQMDMain} {targetPath}/job{idx}/{mainBaseName}')
     os.system(f'ln -s {UrQMDTable} {targetPath}/job{idx}/{tableBaseName}')
-    os.system(f'ln -s {os.getcwd()}/cvt {targetPath}/job{idx}/cvt')
     # then copy the configuration files
     os.system(f'cp {os.getcwd()}/input.txt {targetPath}/job{idx}/qmd_input.txt')
     os.system(f'cp {os.getcwd()}/Generator.sh {targetPath}/job{idx}/Generator.sh')
     # set job id in script (just for changing the output root file name)
-    os.system(f'sed -i "s|__JID__|{idx}|g" {targetPath}/job{idx}/Generator.sh')
+    os.system(f'sed -i "s|__JID__|{idx:05d}|g" {targetPath}/job{idx}/Generator.sh')
     os.system(f'chmod +x {targetPath}/job{idx}/Generator.sh')
     # replace key words in the input file
     os.system(f'sed -i "s|__NEV__|{nEventsPerJob}|g" {targetPath}/job{idx}/qmd_input.txt')
     os.system(f'sed -i "s|__RSD__|{thisSeed}|g" {targetPath}/job{idx}/qmd_input.txt')
+    if outputROOT:
+        os.system(f'sed -i "s|Df13|#f13|g" {targetPath}/job{idx}/qmd_input.txt')
+        os.system(f'ln -s {os.getcwd()}/cvt {targetPath}/job{idx}/cvt')
+        os.system(f'sed -i "s|__SW13__|true|g" {targetPath}/job{idx}/Generator.sh')
+    if outputCEE:
+        os.system(f'sed -i "s|Df14|#f14|g" {targetPath}/job{idx}/qmd_input.txt')
+        os.system(f'sed -i "s|__SW14__|true|g" {targetPath}/job{idx}/Generator.sh')
 
     os.system(f'cd {targetPath}/job{idx} && sbatch Generator.sh')
     l.log(f'[LOG] - Manager System:Job {idx} submitted, random seed: {thisSeed}')
