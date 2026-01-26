@@ -5,15 +5,16 @@ tar 12 6 # C+C
 nev __NEV__
 tim 50 50
 ecm 1.1
-imp -16.0
+imp -6.0 # C+C minbias
+# imp -10.0 # C+Pb minbias
 rsd __RSD__
 
 cto 63 0 # Skyrme
 cto 64 1 # cluster ON
 eos 0 # mean field
 
-#f13
-f14
+Df13
+Df14
 f15
 f16
 f19
