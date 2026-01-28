@@ -4,7 +4,7 @@ tar 12 6 # C+C
 
 nev __NEV__
 tim 50 50
-ecm 1.1
+elb 1.1
 imp -6.0 # C+C minbias
 # imp -10.0 # C+Pb minbias
 rsd __RSD__
