@@ -6,6 +6,10 @@
     In case higher version of UrQMD changed the raw file, this script will no longer work!
     Date: 12.12.2025 - Yige Huang
 
+    Revision 1.1: 06.03.2026 - Yige Huang
+    
+    > Add support to light nuclei (d, t, ...)
+    
     Usage:
 
     #include "PIDConvert.h"
@@ -115,7 +119,15 @@ class PIDHelper {
             {136,  0, 10441},
             {137,  0, 100443},
             {138,   0,   431},
-            {139,   0,   433}
+            {139,   0,   433},
+            // light nuclei, requirement: output ftn13 AND set CTO 64 1
+            // 10LZZZAAAI
+            {200, 0, 1000010020}, // deutron
+            {201, -1, 1000010030}, // triton
+            {202, 1, 1000020030}, // He3
+            {203, 0, 1000020040}, // He4
+            {211, 1, 1100020030}, // H3L
+            {213, 0, 1100020040} // H4L
         };
 
     public:
