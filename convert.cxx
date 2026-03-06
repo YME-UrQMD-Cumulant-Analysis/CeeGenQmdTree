@@ -75,18 +75,30 @@ int main(int argc, char** argv) {
             float px_, py_, pz_; // px py pz
             float val6; // m
             int ityp, iso3; // ityp 2i3, and later values are not used
+            float fzval1, rx_fz, ry_fz, rz_fz, fzval5; // freeze-out r0 rx ry rz p0
+            float px_fz, py_fz, pz_fz; // freeze-out px py pz
 
             iss >> val1 >> rx_ >> ry_ >> rz_ >> val5
                 >> px_ >> py_ >> pz_
-                >> val6 >> ityp >> iso3;
-            if (val1 == 0 && val5 == 0) { continue; }
-            int pdgId = pc.GetPdgID(ityp, iso3);
-            vpx.push_back(px_);
-            vpy.push_back(py_);
-            vpz.push_back(pz_);
-            vrx.push_back(rx_);
-            vry.push_back(ry_);
-            vrz.push_back(rz_);
+                >> val6 >> ityp >> iso3
+                >> fzval1 >> rz_fz >> ry_fz >> rz_fz
+                >> px_fz >> py_fz >> pz_fz;
+                int pdgId = pc.GetPdgID(ityp, iso3);
+                if (val1 == 0 && val5 == 0) { // this one is from coalescence
+                    vpx.push_back(px_fz);
+                    vpy.push_back(py_fz);
+                    vpz.push_back(pz_fz);
+                    vrx.push_back(rx_fz);
+                    vry.push_back(ry_fz);
+                    vrz.push_back(rz_fz);
+                } else {
+                    vpx.push_back(px_);
+                    vpy.push_back(py_);
+                    vpz.push_back(pz_);
+                    vrx.push_back(rx_);
+                    vry.push_back(ry_);
+                    vrz.push_back(rz_);
+                }
             vpid.push_back(pdgId);
         } else if (line.rfind("UQMD", 0) == 0) {
             if (isRunning) { // if it is NOT the first: last event ends, record it, and clean the branchs
