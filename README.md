@@ -1,10 +1,10 @@
 # Submit jobs to generate UrQMD data
 
-`version`: U4 1.2 - CEE
+`version`: U4 1.3 - CEE
 
 `author`: Yige Huang
 
-`Date`: 26.01.2026
+`Date`: 06.03.2026
 
 ## Beschriebung
 
@@ -16,7 +16,9 @@ This program will:
 
 3. Convert plain text outputs to ROOT files;
 
-    * for CEE simulation, we keep `ftn14` and won't convert;
+    * for CEE simulation, we keep `ftn13` and won't convert (inline coalescence output);
+
+    * if we don't need urqmd inline coalescence, `ftn14` will be kept;
 
 4. Clean up raw outputs to save disk space.
 
@@ -34,11 +36,17 @@ This program will:
 
     4. Output format tag: `root` / `ROOT` / `r` / `R`, or `cee` / `CEE` / `c` / `C`, or `both` / `BOTH` / `b` / `B`;
 
+        * for `ftn14`, i.e. old version output, use `ftn14`;
+
 3. Submit jobs using the manager system with `python3 manager.py submit`;
 
     * In CEE farm, you need to install `python3` yourself in case root file is needed.
 
 ## Änderungsprotokoll
+
+06.03.2026 `U4 v1.3` - Yige Huang
+
+* Add support to PID convert for coalescence (requires `ftn13`)
 
 26.01.2026 `U4 v1.2` - Yige Huang
 
