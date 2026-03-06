@@ -15,6 +15,7 @@ export ftn13=qmd_ftn13.txt
 export ftn14=qmd_ftn14.txt
 sw13=__SW13__
 sw14=__SW14__
+kp13=__KP13__
 
 if [ -x $qmdExec ]; then
     echo "[LOG] - Generator.sh: Running UrQMD main"
@@ -39,8 +40,12 @@ if [ "$sw13" = "true" ]; then
         exit 703
     fi
 
-    ###### Remove raw output
-    rm $ftn13
+    if [ "$kp13" = "false" ]; then
+        ###### Remove raw output (mode: ROOT)
+        rm $ftn13
+    else
+        mv $ftn13 __JID__.dat
+    fi
 fi
 
 if [ "$sw14" = "true" ]; then
@@ -49,5 +54,5 @@ if [ "$sw14" = "true" ]; then
         echo "[LOG] - Generator.sh: Output for CEE doesn't exist"
         exit 704
     fi
-    mv $ftn14 __JID__.dat
+    mv $ftn14 __JID__.f14.dat
 fi
