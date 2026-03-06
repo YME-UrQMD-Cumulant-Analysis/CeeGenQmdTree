@@ -100,7 +100,10 @@ for idx in range(nJobs):
         os.system(f'sed -i "s|Df13|#f13|g" {targetPath}/job{idx}/qmd_input.txt')
         os.system(f'sed -i "s|__SW13__|true|g" {targetPath}/job{idx}/Generator.sh')
         if outputROOT:
+            os.system(f'sed -i "s|__CVT13__|true|g" {targetPath}/job{idx}/Generator.sh')
             os.system(f'ln -s {os.getcwd()}/cvt {targetPath}/job{idx}/cvt')
+        else:
+            os.system(f'sed -i "s|__CVT13__|false|g" {targetPath}/job{idx}/Generator.sh')
         if outputF13:
             os.system(f'sed -i "s|__KP13__|true|g" {targetPath}/job{idx}/Generator.sh')
         else:

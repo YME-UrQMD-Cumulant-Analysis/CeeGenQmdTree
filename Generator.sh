@@ -16,6 +16,7 @@ export ftn14=qmd_ftn14.txt
 sw13=__SW13__
 sw14=__SW14__
 kp13=__KP13__
+cvt13=__CVT13__
 
 if [ -x $qmdExec ]; then
     echo "[LOG] - Generator.sh: Running UrQMD main"
@@ -26,18 +27,21 @@ else
 fi
 
 if [ "$sw13" = "true" ]; then
-    ###### Convert
-    cvtExec="cvt"
     if [ ! -f $ftn13 ]; then
         echo "[LOG] - Generator.sh: Output for ROOT doesn't exist"
         exit 702
     fi
-    if [ -x $cvtExec ]; then
-        echo "[LOG] - Generator.sh: Running formatting convert program"
-        ./$cvtExec $ftn13 __JID__
-    else 
-        echo "[LOG] - Generator.sh: convert executable ($cvtExec) not found"
-        exit 703
+    
+    if [ "$cvt13" = "true" ]; then 
+        ###### Convert
+        cvtExec="cvt"
+        if [ -x $cvtExec ]; then
+            echo "[LOG] - Generator.sh: Running formatting convert program"
+            ./$cvtExec $ftn13 __JID__
+        else 
+            echo "[LOG] - Generator.sh: convert executable ($cvtExec) not found"
+            exit 703
+        fi
     fi
 
     if [ "$kp13" = "false" ]; then
