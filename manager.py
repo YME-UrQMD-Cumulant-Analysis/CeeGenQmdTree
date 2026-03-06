@@ -31,22 +31,27 @@ else:
 existing_set = set(rds)
 
 outputFormat = Args.outputFormat
+outputF13 = False
+outputF14 = False
 outputROOT = False
-outputCEE = False
 if outputFormat in ['r', 'R', 'root', 'ROOT']:
     outputROOT = True
 elif outputFormat in ['c', 'C', 'cee', 'CEE']:
-    outputCEE = True
+    outputF13 = True
 elif outputFormat in ['b', 'B', 'both', 'BOTH']:
     outputROOT = True
-    outputCEE = True
+    outputF13 = True
+elif outputFormat in ['ftn14']:
+    outputF14 = True
 else:
     l.log(f'[ERROR] - Manager System: Invalid output format received {outputFormat}!')
     raise Exception(f'[ERROR] - Manager System: Invalid output format received {outputFormat}!')
 if outputROOT:
     l.log(f'[LOG] - Manager System: ROOT output is on')
-if outputCEE:
-    l.log(f'[LOG] - Manager System: CEE output is on')
+if outputF13:
+    l.log(f'[LOG] - Manager System: CEE output (ftn13) is on')
+if outputF14:
+    l.log(f'[LOG] - Manager System: CEE output (ftn14) is on')
 
 UrQMDMain = Args.UrQMDMain
 UrQMDTable = Args.UrQMDTable
@@ -84,19 +89,22 @@ for idx in range(nJobs):
     # replace key words in the input file
     os.system(f'sed -i "s|__NEV__|{nEventsPerJob}|g" {targetPath}/job{idx}/qmd_input.txt')
     os.system(f'sed -i "s|__RSD__|{thisSeed}|g" {targetPath}/job{idx}/qmd_input.txt')
-    if outputROOT:
-        os.system(f'sed -i "s|Df13|#f13|g" {targetPath}/job{idx}/qmd_input.txt')
-        os.system(f'ln -s {os.getcwd()}/cvt {targetPath}/job{idx}/cvt')
-        os.system(f'sed -i "s|__SW13__|true|g" {targetPath}/job{idx}/Generator.sh')
-    else:
-        os.system(f'sed -i "s|Df13|f13|g" {targetPath}/job{idx}/qmd_input.txt')
-        os.system(f'sed -i "s|__SW13__|false|g" {targetPath}/job{idx}/Generator.sh')
-    if outputCEE:
+    if outputF14: # f14 on means f13 off: we don't save both
         os.system(f'sed -i "s|Df14|#f14|g" {targetPath}/job{idx}/qmd_input.txt')
         os.system(f'sed -i "s|__SW14__|true|g" {targetPath}/job{idx}/Generator.sh')
+        os.system(f'sed -i "s|Df13|f13|g" {targetPath}/job{idx}/qmd_input.txt')
+        os.system(f'sed -i "s|__SW13__|false|g" {targetPath}/job{idx}/Generator.sh')
     else:
         os.system(f'sed -i "s|Df14|f14|g" {targetPath}/job{idx}/qmd_input.txt')
         os.system(f'sed -i "s|__SW14__|false|g" {targetPath}/job{idx}/Generator.sh')
+        os.system(f'sed -i "s|Df13|#f13|g" {targetPath}/job{idx}/qmd_input.txt')
+        os.system(f'sed -i "s|__SW13__|true|g" {targetPath}/job{idx}/Generator.sh')
+        if outputROOT:
+            os.system(f'ln -s {os.getcwd()}/cvt {targetPath}/job{idx}/cvt')
+        if outputF13:
+            os.system(f'sed -i "s|__KP13__|true|g" {targetPath}/job{idx}/Generator.sh')
+        else:
+            os.system(f'sed -i "s|__KP13__|false|g" {targetPath}/job{idx}/Generator.sh')
 
     os.system(f'cd {targetPath}/job{idx} && sbatch Generator.sh')
     l.log(f'[LOG] - Manager System:Job {idx} submitted, random seed: {thisSeed}')
@@ -108,5 +116,3 @@ with open(rdsList, 'w') as f:
 
 
 l.log(f'[LOG] - Manager System: In total {len(rds)} random seeds used.')
-
-        
